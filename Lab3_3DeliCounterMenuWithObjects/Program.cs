@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Lab3_3DeliCounterMenuWithObjects
 {
@@ -39,9 +40,10 @@ namespace Lab3_3DeliCounterMenuWithObjects
                     Console.WriteLine("Type 'A' to add a new item to the menu");
                     Console.WriteLine("Type 'R' to remove an item from the menu");
                     Console.WriteLine("Type 'C' to change an item on the menu");
+                    Console.WriteLine("Type 'S' to sell an item on the menu");
                     Console.WriteLine("Type 'Q' to quit\n");
                     userInput = Console.ReadLine().ToUpper();
-                    validInput = IsValidString(userInput, "A", "R", "C", "Q");
+                    validInput = IsValidString(userInput, "A", "R", "C", "S", "Q");
                 }
 
                 switch (userInput)
@@ -56,6 +58,10 @@ namespace Lab3_3DeliCounterMenuWithObjects
                         break;
                     case "C":
                         ChangeMenuItem(menuItems);
+                        DisplayMenu(menuItems);
+                        break;
+                    case "S":
+                        SellMenuItem(menuItems);
                         DisplayMenu(menuItems);
                         break;
                     case "Q":
@@ -174,7 +180,45 @@ namespace Lab3_3DeliCounterMenuWithObjects
             Console.WriteLine($"{name} has been updated on the menu");
         }
 
-        static bool IsValidString(string userInput, string validInput1, string validInput2, string validInput3, string validInput4)
+        static void SellMenuItem(Dictionary<string, MenuItem> existingMenu)
+        {
+            string name = "";
+            bool itemExists = false;
+            while (!itemExists)
+            {
+                Console.Write("What is the name of the menu item you sold? ");
+                name = Console.ReadLine();
+
+                if (existingMenu.ContainsKey(name))
+                {
+                    int quantitySold = 0;
+                    bool validQuantity = false;
+                    while (!validQuantity)
+                    {
+                        Console.Write($"\nHow many {name}s did you sell? ");
+                        Int32.TryParse(Console.ReadLine(), out quantitySold);
+                        if (quantitySold <= existingMenu[name].quantity && quantitySold > 0)
+                        {
+                            validQuantity = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\nThat is not a valid amount. Please input a quantity no larger than {existingMenu[name].quantity}, since that is all we have left!");
+                        }
+                    }
+                    existingMenu[name].sell(quantitySold);
+                    itemExists = true;
+                }
+                else
+                {
+                    Console.WriteLine("\nThat item does not exists on the menu, try again!\n");
+                }
+            }
+            Console.WriteLine($"\nThe quantity of {name}s has been updated on the menu");
+            Thread.Sleep(1500);
+        }
+
+        static bool IsValidString(string userInput, string validInput1, string validInput2, string validInput3, string validInput4, string validInput5)
         {
             bool validString = false;
             while (!validString)
@@ -183,7 +227,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
                 for (int i = 0; i < userInput.Length; i++)
                 {
                     char letter = char.ToUpper(userInput[i]);
-                    if (letter != char.ToUpper(validInput1[i]) && letter != char.ToUpper(validInput2[i]) && letter != char.ToUpper(validInput3[i]) && letter != char.ToUpper(validInput4[i]))
+                    if (letter != char.ToUpper(validInput1[i]) && letter != char.ToUpper(validInput2[i]) && letter != char.ToUpper(validInput3[i]) && letter != char.ToUpper(validInput4[i]) && letter != char.ToUpper(validInput5[i]))
                     {
                         validString = false;
                         break;
@@ -209,7 +253,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
         public int quantity;
         public void sell(int howMany)
         {
-
+            quantity -= howMany;
         }
     }
 }
