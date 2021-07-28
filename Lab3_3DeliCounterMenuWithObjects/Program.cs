@@ -9,22 +9,10 @@ namespace Lab3_3DeliCounterMenuWithObjects
         static void Main(string[] args)
         {
             Dictionary<string, MenuItem> menuItems = new Dictionary<string, MenuItem>();
-            menuItems["Cuban"] = new MenuItem();
-            menuItems["Cuban"].name = "Cuban";
-            menuItems["Cuban"].price = 12.35m;
-            menuItems["Cuban"].quantity = 25;
-            menuItems["Club"] = new MenuItem();
-            menuItems["Club"].name = "Club";
-            menuItems["Club"].price = 14.75m;
-            menuItems["Club"].quantity = 20;
-            menuItems["California Club"] = new MenuItem();
-            menuItems["California Club"].name = "California Club";
-            menuItems["California Club"].price = 16.99m;
-            menuItems["California Club"].quantity = 15;
-            menuItems["Reuben"] = new MenuItem();
-            menuItems["Reuben"].name = "Reuben";
-            menuItems["Reuben"].price = 15.99m;
-            menuItems["Reuben"].quantity = 30;
+            menuItems["Cuban"] = new MenuItem("Cuban", 12.35m, 25);
+            menuItems["Club"] = new MenuItem("Club", 14.75m, 20);
+            menuItems["California Club"] = new MenuItem("California Club", 16.99m, 15);
+            menuItems["Reuben"] = new MenuItem("Reuben", 15.99m, 30);
             string userInput = "";
             bool endProgram = false;
 
@@ -79,7 +67,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
             Console.WriteLine("\nDeli Counter Menu");
             foreach (var item in existingMenu)
             {
-                Console.WriteLine($"{item.Value.name}...........${item.Value.price} ({item.Value.quantity} remaining)");
+                Console.WriteLine($"{item.Value.name} ${item.Value.price} ({item.Value.quantity} remaining)");
             }
         }
 
@@ -108,10 +96,9 @@ namespace Lab3_3DeliCounterMenuWithObjects
             Console.Write("How many will be available to sell? ");
             quantity = Int32.Parse(Console.ReadLine());
 
-            existingMenu[name] = new MenuItem();
-            existingMenu[name].name = name;
-            existingMenu[name].price = price;
-            existingMenu[name].quantity = quantity;
+            existingMenu[name] = new MenuItem(name, price, quantity);
+            Console.WriteLine($"{name} has been added to the menu");
+            Thread.Sleep(1500);
         }
 
         static void RemoveMenuItem(Dictionary<string, MenuItem> existingMenu)
@@ -134,6 +121,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
                 }
             }
             Console.WriteLine($"{name} has been removed from the menu");
+            Thread.Sleep(1500);
         }
 
         static void ChangeMenuItem(Dictionary<string, MenuItem> existingMenu)
@@ -159,6 +147,8 @@ namespace Lab3_3DeliCounterMenuWithObjects
                     Console.Write("What is the new price you would like to give? ");
                     newPrice = decimal.Parse(Console.ReadLine());
                     existingMenu[name].price = newPrice;
+                    Console.WriteLine($"{name}'s price has been updated on the menu");
+                    Thread.Sleep(1500);
                     break;
                 default:
                     Console.WriteLine("Not valid input");
@@ -172,12 +162,10 @@ namespace Lab3_3DeliCounterMenuWithObjects
             Console.Write("What is the new name you would like to give? ");
             name = Console.ReadLine();
 
-            existingMenu[name] = new MenuItem();
-            existingMenu[name].name = name;
-            existingMenu[name].price = existingPrice;
-            existingMenu[name].quantity = existingQuantity;
+            existingMenu[name] = new MenuItem(name, existingPrice, existingQuantity);
 
             Console.WriteLine($"{name} has been updated on the menu");
+            Thread.Sleep(1500);
         }
 
         static void SellMenuItem(Dictionary<string, MenuItem> existingMenu)
@@ -248,6 +236,13 @@ namespace Lab3_3DeliCounterMenuWithObjects
 
     class MenuItem
     {
+        public MenuItem(string Name, decimal Price, int Quantity)
+        {
+            name = Name;
+            price = Price;
+            quantity = Quantity;
+        }
+
         public string name;
         public decimal price;
         public int quantity;
