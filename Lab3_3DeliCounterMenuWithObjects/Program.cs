@@ -83,9 +83,9 @@ namespace Lab3_3DeliCounterMenuWithObjects
 
             while (alreadyExists)
             {
-                Console.Write("What is the name of the new menu item you would like to add? ");
+                Console.Write("What is the name of the new menu item you would like to add? Enter name of menu item or type 'CANCEL' to go back to the main menu: ");
                 name = Console.ReadLine();
-                if (!existingMenu.ContainsKey(name.ToUpper()))
+                if (!existingMenu.ContainsKey(name.ToUpper()) || name.ToUpper() == "CANCEL")
                 {
                     alreadyExists = false;
                 }
@@ -93,6 +93,13 @@ namespace Lab3_3DeliCounterMenuWithObjects
                 {
                     Console.WriteLine("That item already exists on the menu, try again!\n");
                 }
+            }
+
+            if (name.ToUpper() == "CANCEL")
+            {
+                Console.WriteLine("Heading back to the main menu...");
+                Thread.Sleep(1200);
+                return;
             }
 
             Console.Write("What is the price? ");
@@ -120,7 +127,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
             bool itemExists = false;      
             while (!itemExists)
             {
-                Console.Write("What is the name of the menu item you would like to remove? ");
+                Console.Write("What is the name of the menu item you would like to remove? Enter name of menu item or type 'CANCEL' to go back to the main menu: ");
                 name = Console.ReadLine();
 
                 if (existingMenu.ContainsKey(name.ToUpper()))
@@ -129,11 +136,23 @@ namespace Lab3_3DeliCounterMenuWithObjects
                     existingMenu.Remove(name.ToUpper());
                     itemExists = true;
                 }
+                else if (name.ToUpper() == "CANCEL")
+                {
+                    itemExists = true;
+                }
                 else
                 {
                     Console.WriteLine("That item does not exists on the menu, try again!\n");
                 }
             }
+
+            if (name.ToUpper() == "CANCEL")
+            {
+                Console.WriteLine("Heading back to the main menu...");
+                Thread.Sleep(1200);
+                return;
+            }
+
             Console.WriteLine($"{currentMenuName} has been removed from the menu");
             Thread.Sleep(1500);
         }
@@ -146,7 +165,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
 
             while (!itemExists)
             {
-                Console.Write("What is the name of the menu item you would like to change? ");
+                Console.Write("What is the name of the menu item you would like to change? Enter name of menu item or type 'CANCEL' to go back to the main menu: ");
                 name = Console.ReadLine();
 
                 if (existingMenu.ContainsKey(name.ToUpper()))
@@ -154,11 +173,22 @@ namespace Lab3_3DeliCounterMenuWithObjects
                     currentMenuName = existingMenu[name.ToUpper()].Name;
                     itemExists = true;
                 }
+                else if (name.ToUpper() == "CANCEL")
+                {
+                    itemExists = true;
+                }
                 else
                 {
                     Console.WriteLine("That item does not exists on the menu, try again!\n");
                 }
-            }         
+            }
+
+            if (name.ToUpper() == "CANCEL")
+            {
+                Console.WriteLine("Heading back to the main menu...");
+                Thread.Sleep(1200);
+                return;
+            }
 
             string selection;
             Console.Write($"Would you like to edit the name or price of {currentMenuName}? Type 'name' or 'price': ");
@@ -208,7 +238,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
             bool itemExists = false;
             while (!itemExists)
             {
-                Console.Write("What is the name of the menu item you sold? ");
+                Console.Write("What is the name of the menu item you sold? Enter name of menu item or type 'CANCEL' to go back to the main menu: ");
                 name = Console.ReadLine();
 
                 if (existingMenu.ContainsKey(name.ToUpper()))
@@ -223,11 +253,23 @@ namespace Lab3_3DeliCounterMenuWithObjects
                     existingMenu[name.ToUpper()].sell(quantitySold);
                     itemExists = true;
                 }
+                else if (name.ToUpper() == "CANCEL")
+                {
+                    itemExists = true;
+                }
                 else
                 {
                     Console.WriteLine("\nThat item does not exists on the menu, try again!\n");
                 }
             }
+
+            if (name.ToUpper() == "CANCEL")
+            {
+                Console.WriteLine("Heading back to the main menu...");
+                Thread.Sleep(1200);
+                return;
+            }
+
             Console.WriteLine($"\nThe quantity of {existingMenu[name.ToUpper()].Name}s has been updated on the menu");
             Thread.Sleep(1500);
         }
