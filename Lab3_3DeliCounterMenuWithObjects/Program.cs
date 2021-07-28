@@ -9,10 +9,10 @@ namespace Lab3_3DeliCounterMenuWithObjects
         static void Main(string[] args)
         {
             Dictionary<string, MenuItem> menuItems = new Dictionary<string, MenuItem>();
-            menuItems["Cuban"] = new MenuItem("Cuban", 12.35m, 25);
-            menuItems["Club"] = new MenuItem("Club", 14.75m, 20);
-            menuItems["California Club"] = new MenuItem("California Club", 16.99m, 15);
-            menuItems["Reuben"] = new MenuItem("Reuben", 15.99m, 30);
+            menuItems["CUBAN"] = new MenuItem("Cuban", 12.35m, 25);
+            menuItems["CLUB"] = new MenuItem("Club", 14.75m, 20);
+            menuItems["CALIFORNIA CLUB"] = new MenuItem("California Club", 16.99m, 15);
+            menuItems["REUBEN"] = new MenuItem("Reuben", 15.99m, 30);
             string userInput = "";
             bool endProgram = false;
 
@@ -31,7 +31,8 @@ namespace Lab3_3DeliCounterMenuWithObjects
                     Console.WriteLine("Type 'S' to sell an item on the menu");
                     Console.WriteLine("Type 'Q' to quit\n");
                     userInput = Console.ReadLine().ToUpper();
-                    validInput = IsValidString(userInput, "A", "R", "C", "S", "Q");
+                    List<string> validInputOptions = new List<string> { "A", "R", "C", "S", "Q" };
+                    validInput = IsValidString(userInput, validInputOptions);
                 }
 
                 switch (userInput)
@@ -67,7 +68,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
             Console.WriteLine("\nDeli Counter Menu");
             foreach (var item in existingMenu)
             {
-                Console.WriteLine($"{item.Value.name} ${item.Value.price} ({item.Value.quantity} remaining)");
+                Console.WriteLine($"{item.Value.Name} ${item.Value.Price} ({item.Value.Quantity} remaining)");
             }
         }
 
@@ -81,7 +82,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
             {
                 Console.Write("What is the name of the new menu item you would like to add? ");
                 name = Console.ReadLine();
-                if (!existingMenu.ContainsKey(name))
+                if (!existingMenu.ContainsKey(name.ToUpper()))
                 {
                     alreadyExists = false;
                 }
@@ -96,7 +97,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
             Console.Write("How many will be available to sell? ");
             quantity = Int32.Parse(Console.ReadLine());
 
-            existingMenu[name] = new MenuItem(name, price, quantity);
+            existingMenu[name.ToUpper()] = new MenuItem(name, price, quantity);
             Console.WriteLine($"{name} has been added to the menu");
             Thread.Sleep(1500);
         }
@@ -110,9 +111,9 @@ namespace Lab3_3DeliCounterMenuWithObjects
                 Console.Write("What is the name of the menu item you would like to remove? ");
                 name = Console.ReadLine();
 
-                if (existingMenu.ContainsKey(name))
+                if (existingMenu.ContainsKey(name.ToUpper()))
                 {
-                    existingMenu.Remove(name);
+                    existingMenu.Remove(name.ToUpper());
                     itemExists = true;
                 }
                 else
@@ -137,16 +138,16 @@ namespace Lab3_3DeliCounterMenuWithObjects
             switch (selection)
             {
                 case "NAME":
-                    decimal price = existingMenu[name].price;
-                    int quantity = existingMenu[name].quantity;
-                    existingMenu.Remove(name);
+                    decimal price = existingMenu[name.ToUpper()].Price;
+                    int quantity = existingMenu[name.ToUpper()].Quantity;
+                    existingMenu.Remove(name.ToUpper());
                     NameChange(existingMenu, price, quantity);
                     break;
                 case "PRICE":
                     decimal newPrice;
                     Console.Write("What is the new price you would like to give? ");
                     newPrice = decimal.Parse(Console.ReadLine());
-                    existingMenu[name].price = newPrice;
+                    existingMenu[name.ToUpper()].Price = newPrice;
                     Console.WriteLine($"{name}'s price has been updated on the menu");
                     Thread.Sleep(1500);
                     break;
@@ -162,7 +163,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
             Console.Write("What is the new name you would like to give? ");
             name = Console.ReadLine();
 
-            existingMenu[name] = new MenuItem(name, existingPrice, existingQuantity);
+            existingMenu[name.ToUpper()] = new MenuItem(name, existingPrice, existingQuantity);
 
             Console.WriteLine($"{name} has been updated on the menu");
             Thread.Sleep(1500);
@@ -177,7 +178,7 @@ namespace Lab3_3DeliCounterMenuWithObjects
                 Console.Write("What is the name of the menu item you sold? ");
                 name = Console.ReadLine();
 
-                if (existingMenu.ContainsKey(name))
+                if (existingMenu.ContainsKey(name.ToUpper()))
                 {
                     int quantitySold = 0;
                     bool validQuantity = false;
@@ -185,16 +186,16 @@ namespace Lab3_3DeliCounterMenuWithObjects
                     {
                         Console.Write($"\nHow many {name}s did you sell? ");
                         Int32.TryParse(Console.ReadLine(), out quantitySold);
-                        if (quantitySold <= existingMenu[name].quantity && quantitySold > 0)
+                        if (quantitySold <= existingMenu[name.ToUpper()].Quantity && quantitySold > 0)
                         {
                             validQuantity = true;
                         }
                         else
                         {
-                            Console.WriteLine($"\nThat is not a valid amount. Please input a quantity no larger than {existingMenu[name].quantity}, since that is all we have left!");
+                            Console.WriteLine($"\nThat is not a valid amount. Please input a quantity no larger than {existingMenu[name.ToUpper()].Quantity}, since that is all we have left!");
                         }
                     }
-                    existingMenu[name].sell(quantitySold);
+                    existingMenu[name.ToUpper()].sell(quantitySold);
                     itemExists = true;
                 }
                 else
@@ -206,27 +207,22 @@ namespace Lab3_3DeliCounterMenuWithObjects
             Thread.Sleep(1500);
         }
 
-        static bool IsValidString(string userInput, string validInput1, string validInput2, string validInput3, string validInput4, string validInput5)
+        static bool IsValidString(string userInput, List<string> validInputs)
         {
             bool validString = false;
             while (!validString)
             {
                 validString = false;
-                for (int i = 0; i < userInput.Length; i++)
+                foreach (string validInput in validInputs)
                 {
-                    char letter = char.ToUpper(userInput[i]);
-                    if (letter != char.ToUpper(validInput1[i]) && letter != char.ToUpper(validInput2[i]) && letter != char.ToUpper(validInput3[i]) && letter != char.ToUpper(validInput4[i]) && letter != char.ToUpper(validInput5[i]))
-                    {
-                        validString = false;
-                        break;
-                    }
-                    else
+                    if (userInput.ToUpper() == validInput.ToUpper())
                     {
                         validString = true;
                     }
                 }
                 if (validString == false)
                 {
+                    Console.WriteLine("\nThat not a valid input, try again!");
                     break;
                 }
             }
@@ -236,19 +232,19 @@ namespace Lab3_3DeliCounterMenuWithObjects
 
     class MenuItem
     {
-        public MenuItem(string Name, decimal Price, int Quantity)
+        public MenuItem(string name, decimal price, int quantity)
         {
-            name = Name;
-            price = Price;
-            quantity = Quantity;
+            Name = name;
+            Price = price;
+            Quantity = quantity;
         }
 
-        public string name;
-        public decimal price;
-        public int quantity;
+        public string Name;
+        public decimal Price;
+        public int Quantity;
         public void sell(int howMany)
         {
-            quantity -= howMany;
+            Quantity -= howMany;
         }
     }
 }
